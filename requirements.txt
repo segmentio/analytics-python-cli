@@ -1,2 +1,2 @@
-analytics
+analytics-python
 docopt
