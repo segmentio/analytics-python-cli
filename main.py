@@ -1,12 +1,13 @@
+#!/usr/bin/env python
 """Analytics Python CLI.
 
 Usage:
-  analytics track <event> [--properties=<properties>] [--context=<context>] [--writeKey=<writeKey>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics screen <name> [--properties=<properties>] [--context=<context>] [--writeKey=<writeKey>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics page <name> [--properties=<properties>] [--context=<context>] [--writeKey=<writeKey>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics identify [--traits=<traits>] [--context=<context>] [--writeKey=<writeKey>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics group --groupId=<groupId> [--traits=<traits>] [--properties=<properties>] [--context=<context>] [--writeKey=<writeKey>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics alias --userId=<userId> --previousId=<previousId> [--traits=<traits>] [--properties=<properties>] [--context=<context>] [--writeKey=<writeKey>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --method=track --event=<event> [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --method=screen --name=<name> [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --method=page --name=<name> [--properties=<properties>] [--userId=<userId>] [--context=<context>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --method=identify [--traits=<traits>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --method=group --groupId=<groupId> [--traits=<traits>] [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --method=alias --userId=<userId> --previousId=<previousId> [--context=<context>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
   analytics -h | --help
   analytics --version
 
@@ -18,6 +19,7 @@ from docopt import docopt
 import analytics
 import os
 import json
+import sys
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='1.0.0')
@@ -38,33 +40,35 @@ if __name__ == '__main__':
     if integrations:
         integrations = json.loads(integrations)
 
-    if arguments["track"]:
+    method = arguments["--method"]
+
+    if method == "track":
         properties =  arguments["--properties"]
         if properties:
             properties = json.loads(properties)
-        analytics.track(user_id = userId, anonymous_id=anonymousId, event = arguments["<event>"], properties = properties, context = context, integrations = integrations)
-    elif arguments["screen"]:
+        analytics.track(user_id = userId, anonymous_id=anonymousId, event = arguments["--event"], properties = properties, context = context, integrations = integrations)
+    elif method == "screen":
         properties =  arguments["--properties"]
         if properties:
             properties = json.loads(properties)
-        analytics.screen(user_id = userId, anonymous_id=anonymousId, name = arguments["<name>"], properties = properties, context = context, integrations = integrations)
-    elif arguments["page"]:
+        analytics.screen(user_id = userId, anonymous_id=anonymousId, name = arguments["--name"], properties = properties, context = context, integrations = integrations)
+    elif method == "page":
         properties =  arguments["--properties"]
         if properties:
             properties = json.loads(properties)
-        analytics.page(user_id = userId, anonymous_id=anonymousId, name = arguments["<name>"], properties = properties, context = context, integrations = integrations)
-    elif arguments["alias"]:
+        analytics.page(user_id = userId, anonymous_id=anonymousId, name = arguments["--name"], properties = properties, context = context, integrations = integrations)
+    elif method == "alias":
         analytics.alias(user_id = userId, previousId=arguments["--previousId"])
-    elif arguments["group"]:
+    elif method == "group":
         traits =  arguments["--traits"]
         if traits:
             traits = json.loads(traits)
-        analytics.group(user_id = userId, anonymous_id=anonymousId, groupId = arguments["--groupId"], traits = traits, context = context, integrations = integrations)
-    elif arguments["identify"]:
+        analytics.group(user_id = userId, anonymous_id=anonymousId, group_id = arguments["--groupId"], traits = traits, context = context, integrations = integrations)
+    elif method == "identify":
         traits =  arguments["--traits"]
         if traits:
             traits = json.loads(traits)
-        analytics.group(user_id = userId, anonymous_id=anonymousId, traits = traits, context = context, integrations = integrations)
+        analytics.identify(user_id = userId, anonymous_id=anonymousId, traits = traits, context = context, integrations = integrations)
     else:
         raise Exception('Unknown argument')
 
