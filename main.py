@@ -2,12 +2,12 @@
 """Analytics Python CLI.
 
 Usage:
-  analytics --writeKey=<writeKey> --method=track --event=<event> [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics --writeKey=<writeKey> --method=screen --name=<name> [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics --writeKey=<writeKey> --method=page --name=<name> [--properties=<properties>] [--userId=<userId>] [--context=<context>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics --writeKey=<writeKey> --method=identify [--traits=<traits>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics --writeKey=<writeKey> --method=group --groupId=<groupId> [--traits=<traits>] [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
-  analytics --writeKey=<writeKey> --method=alias --userId=<userId> --previousId=<previousId> [--context=<context>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --type=track --event=<event> [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --type=screen --name=<name> [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --type=page --name=<name> [--properties=<properties>] [--userId=<userId>] [--context=<context>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --type=identify [--traits=<traits>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --type=group --groupId=<groupId> [--traits=<traits>] [--properties=<properties>] [--context=<context>] [--userId=<userId>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
+  analytics --writeKey=<writeKey> --type=alias --userId=<userId> --previousId=<previousId> [--context=<context>] [--anonymousId=<anonymousId>] [--integrations=<integrations>] [--timestamp=<timestamp>]
   analytics -h | --help
   analytics --version
 
@@ -40,31 +40,31 @@ if __name__ == '__main__':
     if integrations:
         integrations = json.loads(integrations)
 
-    method = arguments["--method"]
+    msgType = arguments["--type"]
 
-    if method == "track":
+    if msgType == "track":
         properties =  arguments["--properties"]
         if properties:
             properties = json.loads(properties)
         analytics.track(user_id = userId, anonymous_id=anonymousId, event = arguments["--event"], properties = properties, context = context, integrations = integrations)
-    elif method == "screen":
+    elif msgType == "screen":
         properties =  arguments["--properties"]
         if properties:
             properties = json.loads(properties)
         analytics.screen(user_id = userId, anonymous_id=anonymousId, name = arguments["--name"], properties = properties, context = context, integrations = integrations)
-    elif method == "page":
+    elif msgType == "page":
         properties =  arguments["--properties"]
         if properties:
             properties = json.loads(properties)
         analytics.page(user_id = userId, anonymous_id=anonymousId, name = arguments["--name"], properties = properties, context = context, integrations = integrations)
-    elif method == "alias":
+    elif msgType == "alias":
         analytics.alias(user_id = userId, previousId=arguments["--previousId"])
-    elif method == "group":
+    elif msgType == "group":
         traits =  arguments["--traits"]
         if traits:
             traits = json.loads(traits)
         analytics.group(user_id = userId, anonymous_id=anonymousId, group_id = arguments["--groupId"], traits = traits, context = context, integrations = integrations)
-    elif method == "identify":
+    elif msgType == "identify":
         traits =  arguments["--traits"]
         if traits:
             traits = json.loads(traits)
